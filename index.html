@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Anniversary ❤️</title>
+
+<style>
+body{
+  background: url("background.jpg") no-repeat center center fixed;
+  background-size: cover;
+  color:red;
+  font-family:Georgia, serif;
+  text-align:center;
+  padding:20px 10px;
+  overflow-x:hidden;
+}
+
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.6);
+  z-index:-1;
+}
+
+#message{
+  font-size:18px;
+  line-height:1.9;
+  max-width:100%;
+  margin:auto;
+  min-height:260px;
+}
+
+.line{opacity:0; animation:fadeIn 2s forwards;}
+@keyframes fadeIn{from{opacity:0;} to{opacity:1;}}
+
+#yesBtn{
+  margin-top:20px;
+  padding:14px 35px;
+  font-size:20px;
+  background:#ff2d2d;
+  color:white;
+  border:none;
+  border-radius:30px;
+  cursor:pointer;
+  box-shadow:0 0 15px red;
+}
+
+.jump{animation:jump 0.4s;}
+.jumpForever{animation:jump 0.6s infinite;}
+
+@keyframes jump{
+  0%{transform:translateY(0);}
+  50%{transform:translateY(-22px);}
+  100%{transform:translateY(0);}
+}
+
+.hidden{display:none;}
+
+#celebration img{
+  width:65%;
+  max-width:220px;
+  margin:15px auto;
+  cursor:pointer;
+}
+
+#cakeText,#loveText{display:none;}
+#loveText{font-size:30px;margin-top:15px;}
+
+.heart{
+  position:fixed;
+  bottom:0;
+  font-size:24px;
+  animation:float 6s linear infinite;
+}
+
+@keyframes float{
+  0%{transform:translateY(0);opacity:1;}
+  100%{transform:translateY(-800px);opacity:0;}
+}
+
+.kiss{
+  position:fixed;
+  font-size:24px;
+  animation:kissFloat 4s ease-in-out infinite;
+}
+
+@keyframes kissFloat{
+  0%{opacity:0;}
+  20%{opacity:1;}
+  100%{transform:translateY(-200px);opacity:0;}
+}
+
+/* Knife */
+#knifeImg{
+  width:120px;
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  top:-120px;
+  opacity:0;
+  transition:all 1.5s ease;
+}
+.cutKnife{top:220px;opacity:1;}
+</style>
+</head>
+
+<body>
+
+<audio id="bgMusic" src="song.mp3" loop></audio>
+
+<div id="message"></div>
+
+<button id="yesBtn" onclick="yesClick()">YES ❤️</button>
+
+<div id="celebration" class="hidden">
+  <h2>🎆 Happy Anniversary Harish ❤️ 🎆</h2>
+
+  <img src="couple.png">
+
+  <div style="position:relative;">
+    <img id="cakeImg" src="cake.png" onclick="cutCake()">
+    <img id="knifeImg" src="knife.png">
+    <div id="cakeText">🎂 Cake Cut Successfully 🎉</div>
+  </div>
+
+  <img id="giftImg" src="gift.png" onclick="openGift()">
+
+  <div id="loveText" class="jumpForever">
+    I LOVE YOU ❤️<br>
+    FOREVER ♾️
+  </div>
+</div>
+
+<script>
+const lines=[
+"The way you care for your mother and father touches my heart deeply.",
+"Watching you take responsibility for your family is one of the reasons I fell in love with you.",
+"It makes me believe that you will love and care for me with the same warmth and devotion.",
+"When I am with you, the way you take care of me makes me feel safe, valued, and truly loved.",
+"Before you, my life felt incomplete; after you, it is filled with happiness.",
+"I hope we can walk through life together, sharing both its joys and its challenges.",
+"Will you stay with me and grow old together?"
+];
+
+let i=0;
+function showLines(){
+  if(i<lines.length){
+    let d=document.createElement("div");
+    d.className="line";
+    message.appendChild(d);
+    let t=0;
+    let interval=setInterval(()=>{
+      d.innerHTML+=lines[i][t++];
+      if(t===lines[i].length){
+        clearInterval(interval);
+        i++; setTimeout(showLines,1200);
+      }
+    },40);
+  }
+}
+showLines();
+
+let music=false;
+function startMusic(){
+  if(!music){
+    let m=bgMusic;
+    m.volume=0; m.play();
+    music=true;
+    let f=setInterval(()=>{
+      if(m.volume<1) m.volume+=0.04;
+      else clearInterval(f);
+    },200);
+  }
+}
+
+let yes=0;
+function yesClick(){
+  startMusic();
+  yes++;
+  yesBtn.classList.add("jump");
+  setTimeout(()=>yesBtn.classList.remove("jump"),400);
+  if(yes===3){
+    celebration.classList.remove("hidden");
+    hearts();
+  }
+}
+
+function hearts(){
+  setInterval(()=>{
+    let h=document.createElement("div");
+    h.className="heart";
+    h.innerHTML="❤️";
+    h.style.left=Math.random()*100+"%";
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),6000);
+  },350);
+}
+
+let cake=0;
+function cutCake(){
+  cake++;
+  cakeImg.classList.add("jump");
+  setTimeout(()=>cakeImg.classList.remove("jump"),400);
+  if(cake===2){
+    knifeImg.classList.add("cutKnife");
+    setTimeout(()=>{
+      cakeImg.src="cake_cut.png";
+      cakeText.style.display="block";
+    },1500);
+  }
+}
+
+/* 🎁 FINAL GIFT LOGIC */
+let jumping=false;
+let jumpCount=0;
+
+function openGift(){
+  if(jumping) return;
+  jumping=true;
+  jumpCount=0;
+
+  const interval=setInterval(()=>{
+    giftImg.classList.add("jump");
+    setTimeout(()=>giftImg.classList.remove("jump"),400);
+    jumpCount++;
+
+    if(jumpCount===6){
+      clearInterval(interval);
+      loveText.style.display="block";
+      kisses();
+    }
+  },600);
+}
+
+function kisses(){
+  setInterval(()=>{
+    let k=document.createElement("div");
+    k.className="kiss";
+    k.innerHTML="💋";
+    k.style.left=(35+Math.random()*30)+"%";
+    k.style.bottom="150px";
+    document.body.appendChild(k);
+    setTimeout(()=>k.remove(),4000);
+  },600);
+}
+</script>
+
+</body>
+</html>
